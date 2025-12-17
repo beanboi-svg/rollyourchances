@@ -156,6 +156,14 @@ body {
 .num-btn.even { background-color: var(--win-green); }
 .num-btn:active { transform: scale(0.95); }
 
+/* DISABLED STATE FOR ANIMATION */
+.num-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none; 
+    filter: grayscale(80%);
+}
+
 .log-display {
     margin-top: 15px;
     font-family: monospace;
