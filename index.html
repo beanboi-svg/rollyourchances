@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Even/Odds Race to 15</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-wrapper">
+        
+        <div id="setup-screen" class="screen active">
+            <h1>🎲 Race to 15</h1>
+            <p class="subtitle">The Probability Project</p>
+            
+            <div class="rules-card">
+                <h3>Rules</h3>
+                <ul>
+                    <li><strong>Goal:</strong> First to 15 Chips wins!</li>
+                    <li><strong>Roll Even (2, 4, 6):</strong> Win 1 Chip (+1)</li>
+                    <li><strong>Roll Odd (1, 3, 5):</strong> Lose 1 Chip (-1)</li>
+                </ul>
+            </div>
+
+            <div class="player-entry">
+                <input type="text" id="p1" value="Player 1" placeholder="Name 1">
+                <input type="text" id="p2" value="Player 2" placeholder="Name 2">
+                <input type="text" id="p3" value="Player 3" placeholder="Name 3">
+                <input type="text" id="p4" value="Player 4" placeholder="Name 4">
+            </div>
+
+            <button class="btn-start" onclick="startGame()">ENTER THE ARENA</button>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <header>
+                <h2>Target: 15 Chips</h2>
+            </header>
+
+            <div id="scoreboard" class="scoreboard">
+                </div>
+
+            <div class="control-panel">
+                <div class="current-player-display">
+                    <span class="label">Current Roller</span>
+                    <h1 id="active-player-name">Player Name</h1>
+                </div>
+
+                <div class="input-area">
+                    <p>Roll your physical die & enter result:</p>
+                    <div class="number-pad">
+                        <button onclick="submitRoll(1)" class="num-btn odd">1</button>
+                        <button onclick="submitRoll(2)" class="num-btn even">2</button>
+                        <button onclick="submitRoll(3)" class="num-btn odd">3</button>
+                        <button onclick="submitRoll(4)" class="num-btn even">4</button>
+                        <button onclick="submitRoll(5)" class="num-btn odd">5</button>
+                        <button onclick="submitRoll(6)" class="num-btn even">6</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="log-display" class="log-display">Waiting for first roll...</div>
+        </div>
+
+        <div id="win-screen" class="screen">
+            <h1>WE HAVE A WINNER!</h1>
+            <h2 id="winner-name" class="winner-name">Player Name</h2>
+            <div class="confetti-text">15 CHIPS REACHED</div>
+            <button class="btn-restart" onclick="location.reload()">New Game</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
