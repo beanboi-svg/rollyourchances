@@ -15,7 +15,7 @@ function showScreen(name) {
     screens[name].classList.add('active');
 }
 
-// --- SETUP LOGIC (NEW) ---
+// --- SETUP LOGIC ---
 // Run this immediately to generate default inputs
 window.onload = function() {
     renderInputs(4); // Default to 4 players
@@ -68,27 +68,66 @@ function updateCountDisplay() {
 }
 
 
-// --- INITIALIZATION ---
+// --- INITIALIZATION & ANIMATION ---
 function startGame() {
-    // Get all input fields
+    // 1. Collect names from inputs
     const inputs = document.querySelectorAll('.player-input-field');
-    
-    // Reset players array
     players = [];
 
-    // Loop through inputs and create player objects
     inputs.forEach((input) => {
         let pName = input.value.trim();
         if(!pName) pName = input.placeholder; // Fallback if empty
         players.push({ name: pName, score: 0 });
     });
 
+    // 2. SCRAMBLE LOGIC (Math) - This is the "Bias Reduction"
+    // Fisher-Yates Shuffle Algorithm
+    for (let i = players.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [players[i], players[j]] = [players[j], players[i]]; // Swap
+    }
+
+    // 3. PREPARE SCREEN
     currentPlayerIndex = 0;
-    
     renderScoreboard();
-    updateActivePlayerDisplay();
     showScreen('game');
+
+    // 4. ANIMATION SEQUENCE (Slot Machine Effect)
+    const nameDisplay = document.getElementById('active-player-name');
+    const logDisplay = document.getElementById('log-display');
+    const buttons = document.querySelectorAll('.num-btn');
+    
+    // Disable buttons so no one can play yet
+    buttons.forEach(btn => btn.disabled = true);
+    logDisplay.innerText = "🎲 Randomizing turn order...";
+    
+    let steps = 0;
+    const maxSteps = 20; // How many name-swaps to show
+    const intervalTime = 100; // Speed of shuffle in ms
+
+    const shuffleInterval = setInterval(() => {
+        // Show a random name purely for visual effect
+        const randomName = players[Math.floor(Math.random() * players.length)].name;
+        nameDisplay.innerText = randomName;
+        steps++;
+        
+        // Stop animation
+        if (steps >= maxSteps) {
+            clearInterval(shuffleInterval);
+            finishSetup();
+        }
+    }, intervalTime);
+
+    function finishSetup() {
+        // Set the actual true first player (from the scrambled array)
+        updateActivePlayerDisplay();
+        
+        // Re-enable buttons
+        buttons.forEach(btn => btn.disabled = false);
+        logDisplay.innerText = `Order set! ${players[0].name} starts.`;
+    }
 }
+
 
 // --- CORE GAMEPLAY ---
 function submitRoll(rollValue) {
@@ -142,8 +181,11 @@ function renderScoreboard() {
 }
 
 function updateActivePlayerDisplay() {
+    // Highlight the current player in the control panel
     const p = players[currentPlayerIndex];
     document.getElementById('active-player-name').innerText = p.name;
+    
+    // Re-render scoreboard to move the highlight border
     renderScoreboard();
 }
 
