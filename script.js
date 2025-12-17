@@ -15,21 +15,73 @@ function showScreen(name) {
     screens[name].classList.add('active');
 }
 
+// --- SETUP LOGIC (NEW) ---
+// Run this immediately to generate default inputs
+window.onload = function() {
+    renderInputs(4); // Default to 4 players
+};
+
+function renderInputs(count) {
+    const container = document.getElementById('players-container');
+    const currentCount = container.children.length;
+    
+    // If we need more, add them
+    if (count > currentCount) {
+        for (let i = currentCount + 1; i <= count; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'player-input-field';
+            input.placeholder = `Player ${i} Name`;
+            input.value = `Player ${i}`; // Default text
+            container.appendChild(input);
+        }
+    } 
+    // If we need fewer, remove them
+    else if (count < currentCount) {
+        while (container.children.length > count) {
+            container.removeChild(container.lastChild);
+        }
+    }
+    
+    updateCountDisplay();
+}
+
+function addPlayerInput() {
+    const container = document.getElementById('players-container');
+    // Limit to 10 players max to prevent UI breaking
+    if (container.children.length < 10) {
+        renderInputs(container.children.length + 1);
+    }
+}
+
+function removePlayerInput() {
+    const container = document.getElementById('players-container');
+    // Minimum 2 players
+    if (container.children.length > 2) {
+        renderInputs(container.children.length - 1);
+    }
+}
+
+function updateCountDisplay() {
+    const count = document.getElementById('players-container').children.length;
+    document.getElementById('player-count-display').innerText = `${count} Players`;
+}
+
+
 // --- INITIALIZATION ---
 function startGame() {
-    // Get names from inputs
-    const p1 = document.getElementById('p1').value || "Player 1";
-    const p2 = document.getElementById('p2').value || "Player 2";
-    const p3 = document.getElementById('p3').value || "Player 3";
-    const p4 = document.getElementById('p4').value || "Player 4";
+    // Get all input fields
+    const inputs = document.querySelectorAll('.player-input-field');
+    
+    // Reset players array
+    players = [];
 
-    // Initialize players with 0 score
-    players = [
-        { name: p1, score: 0 },
-        { name: p2, score: 0 },
-        { name: p3, score: 0 },
-        { name: p4, score: 0 }
-    ];
+    // Loop through inputs and create player objects
+    inputs.forEach((input) => {
+        let pName = input.value.trim();
+        if(!pName) pName = input.placeholder; // Fallback if empty
+        players.push({ name: pName, score: 0 });
+    });
 
     currentPlayerIndex = 0;
     
@@ -48,12 +100,12 @@ function submitRoll(rollValue) {
 
     if (isEven) {
         player.score++;
-        msg = `${player.name} rolled ${rollValue} (EVEN) -> Gained 1 Chip!`;
+        msg = `${player.name} rolled ${rollValue} (EVEN) -> Gained 1 Point!`;
     } else {
         // Decrease score, but prevent going below 0
         if (player.score > 0) {
             player.score--;
-            msg = `${player.name} rolled ${rollValue} (ODD) -> Lost 1 Chip.`;
+            msg = `${player.name} rolled ${rollValue} (ODD) -> Lost 1 Point.`;
         } else {
             msg = `${player.name} rolled ${rollValue} (ODD) -> Stayed at 0.`;
         }
@@ -90,11 +142,8 @@ function renderScoreboard() {
 }
 
 function updateActivePlayerDisplay() {
-    // Highlight the current player in the control panel
     const p = players[currentPlayerIndex];
     document.getElementById('active-player-name').innerText = p.name;
-    
-    // Re-render scoreboard to move the highlight border
     renderScoreboard();
 }
 
