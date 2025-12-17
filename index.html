@@ -14,7 +14,7 @@
         <div id="setup-screen" class="screen active">
             <img src="https://raw.githubusercontent.com/beanboi-svg/rollyourchances/main/assets/whitelogo.svg" alt="Logo" width="300">
             <p class="subtitle">The Probability Project</p>
-    
+            
             <div class="rules-card">
                 <h3>Rules</h3>
                 <ul>
@@ -24,11 +24,15 @@
                 </ul>
             </div>
 
-            <div class="player-entry">
-                <input type="text" id="p1" value="Player 1" placeholder="Name 1">
-                <input type="text" id="p2" value="Player 2" placeholder="Name 2">
-                <input type="text" id="p3" value="Player 3" placeholder="Name 3">
-                <input type="text" id="p4" value="Player 4" placeholder="Name 4">
+            <div class="player-setup-area">
+                <div id="players-container">
+                    </div>
+                
+                <div class="player-controls">
+                    <button class="control-btn remove" onclick="removePlayerInput()">- Remove</button>
+                    <span id="player-count-display">4 Players</span>
+                    <button class="control-btn add" onclick="addPlayerInput()">+ Add</button>
+                </div>
             </div>
 
             <button class="btn-start" onclick="startGame()">ENTER THE ARENA</button>
