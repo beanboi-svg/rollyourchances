@@ -1,5 +1,5 @@
 // --- STATE ---
-const WINNING_SCORE = 10;
+const WINNING_SCORE = 5;
 let players = [];
 let currentPlayerIndex = 0;
 
